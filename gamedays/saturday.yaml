@@ -9,6 +9,7 @@ rounds:
           col: L
           row: 13
     worksheet: "BB Jugend A"
+    dontshowbefore: 2020-12-09T16:09:53+00:00
   - worksheet: "BB Jugend B"
     gameranges:
       - start:

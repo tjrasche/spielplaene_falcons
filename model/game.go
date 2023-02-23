@@ -1,12 +1,11 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"time"
 )
 
 type Game struct {
-	gorm.Model
+	ID         string `sql:"type:text;primary_key;"`
 	Home       Team
 	HomeID     string
 	Away       Team
@@ -17,4 +16,6 @@ type Game struct {
 	Hall       string
 	Round      Round
 	RoundID    string
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
 }
