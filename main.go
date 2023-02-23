@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -16,7 +15,7 @@ import (
 
 func main() {
 	logger := log.Default()
-	dsn := "host=" + os.Getenv("POSTGRES_HOST") + " user=" + os.Getenv("POSTGRES_USER") + " password=" + os.Getenv("POSTGRES_PASSWORD") + " dbname=" + os.Getenv("POSTGRES_DATABASE") + " port=" + os.Getenv("POSTGRES_PORT") + " sslmode=disable TimeZone=Europe/Berlin"
+	dsn := os.Getenv("DATABASE_URL")
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("Could not connect to database!")
@@ -25,6 +24,9 @@ func main() {
 	if err != nil {
 		panic("Automigration of entities failed!")
 	}
+
+	// hack to circumnavigate gorm's unflexible automigration
+	db.Exec("ALTER TABLE games ALTER COLUMN time TYPE timestamp without time zone;")
 	cfgProvider, err := yaml.NewConfigProvider("gamedays/")
 	if err != nil {
 		panic(err)
@@ -51,26 +53,26 @@ func main() {
 		DB: db,
 	}
 	router.GET("/", func(c *gin.Context) {
-
+		games := repo.FindALl()
+		rounds := repo.FindAllRounds()
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"PageTitle": "Alle Spiele",
-			"Games":     repo.FindALl(),
+			"Games":     games,
+			"Rounds":    rounds,
 		})
 	})
 	router.GET("rounds/:id", func(c *gin.Context) {
 
 		id := c.Param("id")
+		games := repo.FindGamesByRoundId(id)
+		rounds := repo.FindAllRounds()
 
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"PageTitle": "My Page",
-			"Games":     id,
+			"PageTitle": "Spiele " + id,
+			"Games":     games,
+			"Rounds":    rounds,
 		})
 	})
 
 	_ = router.Run()
-}
-
-func getData(id string) string {
-	// Your logic to fetch data based on the ID goes here
-	return fmt.Sprintf("Data for ID %s", id)
 }

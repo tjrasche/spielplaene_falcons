@@ -10,7 +10,7 @@ type Game struct {
 	HomeID     string
 	Away       Team
 	AwayID     string
-	Time       time.Time
+	Time       time.Time `sql:"type:TIMESTAMP WITHOUT TIMEZONE;"`
 	AwayScores int
 	HomeScores int
 	Hall       string

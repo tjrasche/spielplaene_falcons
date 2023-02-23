@@ -13,8 +13,8 @@ func TestFindAll(t *testing.T) {
 	if err != nil {
 		t.Errorf(err.Error())
 	}
-	gr := GameRepository{db: db}
-	res := gr.findALl()
+	gr := GameRepository{DB: db}
+	res := gr.FindALl()
 	for _, game := range res {
 		t.Logf(game.HomeID + " vs . " + game.AwayID + " Halle: " + game.Hall)
 	}
