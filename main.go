@@ -46,14 +46,14 @@ func main() {
 
 	// setup webserver
 	router := gin.Default()
-	router.LoadHTMLGlob(os.Getenv("KO_DATA_PATH") + "/*")
+	router.LoadHTMLGlob("templates/*")
 	repo := model.GameRepository{
 		DB: db,
 	}
 	router.GET("/", func(c *gin.Context) {
 
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"PageTitle": "My Page",
+			"PageTitle": "Alle Spiele",
 			"Games":     repo.FindALl(),
 		})
 	})
