@@ -1,0 +1,27 @@
+name: "Samstag 2023"
+bucket: falcons-samstag
+rounds:
+  - gameranges:
+      - start:
+          col: D
+          row: 4
+        end:
+          col: L
+          row: 13
+    worksheet: "BB Jugend A"
+  - worksheet: "BB Jugend B"
+    gameranges:
+      - start:
+          col: D
+          row: 4
+        end:
+          col: L
+          row: 13
+  - worksheet: "BB Jugend C"
+    gameranges:
+      - start:
+          col: D
+          row: 4
+        end:
+          col: L
+          row: 9
