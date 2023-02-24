@@ -1,39 +1,9 @@
-name: "Samstag 2023"
-bucket: falcons-samstag
-day: 2023-02-25
+name: "Sonntag 2023"
+bucket: falcons-sonntag
+day: 2023-02-26
 rounds:
-  - worksheet: "BB Jugend A"
-    gameranges:
-      - start:
-          col: D
-          row: 4
-        end:
-          col: L
-          row: 13
-    tableranges:
-      - start:
-          col: H
-          row: 17
-        end:
-          col: M
-          row: 21
 
-  - worksheet: "BB Jugend B"
-    gameranges:
-      - start:
-          col: D
-          row: 4
-        end:
-          col: L
-          row: 13
-    tableranges:
-      - start:
-          col: H
-          row: 17
-        end:
-          col: M
-          row: 21
-  - worksheet: "BB Jugend C"
+  - worksheet: "BB Ü16 A"
     gameranges:
       - start:
           col: D
@@ -48,205 +18,192 @@ rounds:
         end:
           col: M
           row: 20
-  - worksheet: "BB Jugend Endrunde"
-    dontshowbefore: 2023-02-25T14:50:00Z
-    gameranges:
-      - start:
-          col: D
-          row: 25
-        end:
-          col: L
-          row: 25
-      - start:
-          col: D
-          row: 28
-        end:
-          col: L
-          row: 28
-      - start:
-          col: D
-          row: 31
-        end:
-          col: L
-          row: 31
-      - start:
-          col: D
-          row: 34
-        end:
-          col: L
-          row: 34
-      - start:
-          col: D
-          row: 38
-        end:
-          col: L
-          row: 38
-      - start:
-          col: D
-          row: 41
-        end:
-          col: L
-          row: 41
-      - start:
-          col: D
-          row: 45
-        end:
-          col: L
-          row: 45
-      - start:
-          col: D
-          row: 48
-        end:
-          col: L
-          row: 48
-      - start:
-          col: D
-          row: 52
-        end:
-          col: L
-          row: 52
-      - start:
-          col: D
-          row: 55
-        end:
-          col: L
-          row: 55
-      - start:
-          col: D
-          row: 59
-        end:
-          col: L
-          row: 59
-      - start:
-          col: D
-          row: 62
-        end:
-          col: L
-          row: 62
-      - start:
-          col: D
-          row: 65
-        end:
-          col: L
-          row: 65
-      - start:
-          col: D
-          row: 69
-        end:
-          col: L
-          row: 69
-      - start:
-          col: D
-          row: 72
-        end:
-          col: L
-          row: 72
-      - start:
-          col: D
-          row: 75
-        end:
-          col: L
-          row: 75
-  - worksheet: "SB Damen A"
+  - worksheet: "BB Ü16 B"
     gameranges:
       - start:
           col: D
           row: 4
         end:
           col: L
-          row: 13
+          row: 9
     tableranges:
       - start:
           col: H
-          row: 16
+          row: 17
         end:
           col: M
           row: 20
-
-  - worksheet: "SB Damen B"
+  - worksheet: "BB Ü16 Endrunde"
+    dontshowbefore: 2023-02-26T11:55:00Z
     gameranges:
       - start:
           col: D
-          row: 4
-        end:
-          col: L
-          row: 13
-    tableranges:
-      - start:
-          col: H
-          row: 16
-        end:
-          col: M
-          row: 20
-  - worksheet: "SB Damen Endrunde"
-    dontshowbefore: 2023-02-25T15:30:00Z
-    gameranges:
-      - start:
-          col: D
-          row: 19
-        end:
-          col: L
-          row: 19
-      - start:
-          col: D
-          row: 22
-        end:
-          col: L
-          row: 22
-      - start:
-          col: D
-          row: 26
-        end:
-          col: L
-          row: 26
-      - start:
-          col: D
-          row: 29
-        end:
-          col: L
-          row: 29
-      - start:
-          col: D
-          row: 45
-        end:
-          col: L
-          row: 45
-      - start:
-          col: D
-          row: 48
-        end:
-          col: L
-          row: 48
-      - start:
-          col: D
-          row: 52
-        end:
-          col: L
-          row: 52
-      - start:
-          col: D
-          row: 55
-        end:
-          col: L
-          row: 55
-      - start:
-          col: D
-          row: 58
-        end:
-          col: L
-          row: 58
-  - worksheet: "SB-BBQ"
-    gameranges:
-      - start:
-          col: D
-          row: 4
+          row: 17
         end:
           col: L
           row: 17
+      - start:
+          col: D
+          row: 19
+        end:
+          col: L
+          row: 19
+      - start:
+          col: D
+          row: 21
+        end:
+          col: L
+          row: 21
+      - start:
+          col: D
+          row: 23
+        end:
+          col: L
+          row: 23
+      - start:
+          col: D
+          row: 25
+        end:
+          col: L
+          row: 25
+      - start:
+          col: D
+          row: 27
+        end:
+          col: L
+          row: 27
+      - start:
+          col: D
+          row: 37
+        end:
+          col: L
+          row: 37
+      - start:
+          col: D
+          row: 40
+        end:
+          col: L
+          row: 40
+      - start:
+          col: D
+          row: 44
+        end:
+          col: L
+          row: 44
+      - start:
+          col: D
+          row: 47
+        end:
+          col: L
+          row: 47
+      - start:
+          col: D
+          row: 51
+        end:
+          col: L
+          row: 51
+      - start:
+          col: D
+          row: 54
+        end:
+          col: L
+          row: 54
+  - worksheet: "BB Schüler A"
+    gameranges:
+      - start:
+          col: D
+          row: 4
+        end:
+          col: L
+          row: 13
     tableranges:
       - start:
           col: H
-          row: 26
+          row: 16
         end:
           col: M
-          row: 30
+          row: 20
+  - worksheet: "BB Schüler B"
+    gameranges:
+      - start:
+          col: D
+          row: 4
+        end:
+          col: L
+          row: 13
+    tableranges:
+      - start:
+          col: H
+          row: 16
+        end:
+          col: M
+          row: 20
+  - worksheet: "BB Schüler Endrunde"
+    dontshowbefore: 2023-02-26T13:10:00Z
+    gameranges:
+      - start:
+          col: D
+          row: 28
+        end:
+          col: L
+          row: 28
+      - start:
+          col: D
+          row: 32
+        end:
+          col: L
+          row: 32
+      - start:
+          col: D
+          row: 36
+        end:
+          col: L
+          row: 36
+      - start:
+          col: D
+          row: 40
+        end:
+          col: L
+          row: 40
+      - start:
+          col: D
+          row: 48
+        end:
+          col: L
+          row: 48
+      - start:
+          col: D
+          row: 52
+        end:
+          col: L
+          row: 52
+      - start:
+          col: D
+          row: 56
+        end:
+          col: L
+          row: 56
+      - start:
+          col: D
+          row: 63
+        end:
+          col: L
+          row: 63
+      - start:
+          col: D
+          row: 68
+        end:
+          col: L
+          row: 68
+      - start:
+          col: D
+          row: 75
+        end:
+          col: L
+          row: 75
+      - start:
+          col: D
+          row: 80
+        end:
+          col: L
+          row: 80

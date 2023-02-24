@@ -20,13 +20,22 @@ func main() {
 	if err != nil {
 		panic("Could not connect to database!")
 	}
-	err = db.AutoMigrate(model.Team{}, model.Round{}, model.Game{})
+	// clean up whole schema (it's only a readmodel to excel anyway)
+	tx := db.Exec("DROP TABLE IF EXISTS games CASCADE;DROP TABLE IF EXISTS gamedays CASCADE;DROP TABLE IF EXISTS rounds CASCADE;DROP TABLE IF EXISTS team_rounds CASCADE;DROP TABLE IF EXISTS teams CASCADE;DROP TABLE IF EXISTS table_rows CASCADE;")
+
+	if tx.Error != nil {
+		panic(tx.Error)
+	}
+	err = db.AutoMigrate(model.Team{}, model.TableRow{}, model.Round{}, model.Game{}, model.Gameday{})
 	if err != nil {
 		panic("Automigration of entities failed!")
 	}
 
 	// hack to circumnavigate gorm's unflexible automigration
-	db.Exec("ALTER TABLE games ALTER COLUMN time TYPE timestamp without time zone;")
+	tx = db.Exec("ALTER TABLE games ALTER COLUMN time TYPE timestamp without time zone;")
+	if tx.Error != nil {
+		panic(tx.Error)
+	}
 	cfgProvider, err := yaml.NewConfigProvider("gamedays/")
 	if err != nil {
 		panic(err)
@@ -34,12 +43,14 @@ func main() {
 
 	for _, gd := range cfgProvider.GamdeDays {
 		ticker := time.NewTicker(10000)
+		logger.Printf("Updating table for %s", gd.Name)
 		go func(day yaml.GameDay) {
 			for range ticker.C {
 				excelReader := excel.NewReader(os.Getenv("CF_ACCOUNT_ID"), os.Getenv("CF_ACCESSKEY_ID"), os.Getenv("CF_ACCESS_KEY_SECRET"), db, day)
 				err := excelReader.UpdateGames()
 				if err != nil {
 					logger.Printf("Error retrieving reading excel doc!")
+					logger.Printf(err.Error())
 				}
 			}
 		}(gd)
@@ -53,24 +64,39 @@ func main() {
 		DB: db,
 	}
 	router.GET("/", func(c *gin.Context) {
-		games := repo.FindALl()
-		rounds := repo.FindAllRounds()
+		wd := time.Now().Weekday()
+		gamedays := repo.FindGameDays()
+		for _, gd := range gamedays {
+			if gd.Day.Weekday() == wd {
+				c.Redirect(307, c.Request.RequestURI+"gamedays/"+gd.ID)
+			}
+		}
+
+		c.Redirect(307, c.Request.RequestURI+"gamedays/"+gamedays[0].ID)
+
+	})
+	router.GET("/gamedays/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		games := repo.FindByGameDay(id)
+		gamedays := repo.FindGameDaysWithRounds()
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"PageTitle": "Alle Spiele",
+			"PageTitle": id,
 			"Games":     games,
-			"Rounds":    rounds,
+			"Gamedays":  gamedays,
 		})
 	})
 	router.GET("rounds/:id", func(c *gin.Context) {
 
 		id := c.Param("id")
 		games := repo.FindGamesByRoundId(id)
-		rounds := repo.FindAllRounds()
-
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"PageTitle": "Spiele " + id,
+		gamedays := repo.FindGameDaysWithRounds()
+		table := repo.FindTableRowsByRound(id)
+		c.HTML(http.StatusOK, "round.html", gin.H{
+			"PageTitle": id,
 			"Games":     games,
-			"Rounds":    rounds,
+			"Gamedays":  gamedays,
+			"Table":     table,
+			"HasTable":  len(table) > 0,
 		})
 	})
 

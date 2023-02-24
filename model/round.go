@@ -8,4 +8,6 @@ type Round struct {
 	UpdatedAt      time.Time
 	DontShowBefore time.Time
 	Games          []Game
+	Gameday        Gameday
+	GamedayID      string
 }

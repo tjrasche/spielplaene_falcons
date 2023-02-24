@@ -37,15 +37,16 @@ func (r Reader) UpdateGames() (err error) {
 	if err != nil {
 		return err
 	}
+	r.db.Save(model.Gameday{ID: r.gameday.Name, Day: r.gameday.Day})
 	for _, round := range r.gameday.Rounds {
 		roundName, err := file.GetCellValue(round.Worksheet, "A1")
 		if err != nil {
 			return err
 		}
-		r.db.Save(&model.Round{ID: roundName, DontShowBefore: round.DontShowBefore})
+		r.db.Save(&model.Round{ID: roundName, DontShowBefore: round.DontShowBefore, GamedayID: r.gameday.Name})
 		for _, gameRange := range round.GameRanges {
 
-			for i := gameRange.Start.Row; i < gameRange.End.Row; i++ {
+			for i := gameRange.Start.Row; i <= gameRange.End.Row; i++ {
 				// get column as rune, so we can later use integer manipulations on it our program will fail with columns larger than the alphabet
 				col := gameRange.Start.Col[0]
 				// get home team and persist it
@@ -53,18 +54,30 @@ func (r Reader) UpdateGames() (err error) {
 				if err != nil {
 					return err
 				}
+				if homeTeam == "" {
+					// field empty, nothing we can to here until field is filled out
+					continue
+				}
 				homeTeamModel := &model.Team{
 					ID: homeTeam,
 				}
+
 				r.db.Save(homeTeamModel)
+
 				err = r.db.Model(homeTeamModel).Association("Rounds").Append([]model.Round{{ID: roundName}})
 				if err != nil {
 					return err
 				}
+
 				// get away team and persist it
 				awayTeam, err := file.GetCellValue(round.Worksheet, string(col+4)+strconv.Itoa(i))
 				if err != nil {
 					return err
+				}
+				if awayTeam == "" {
+					// field empty, nothing we can to here until field is filled out
+					continue
+
 				}
 				awayTeamModel := &model.Team{
 					ID: awayTeam,
@@ -81,12 +94,22 @@ func (r Reader) UpdateGames() (err error) {
 				if err != nil {
 					return err
 				}
-				timeAndHall := strings.Split(timeAndHallStr, ", ")
-				playTime, err := time.Parse("15.04", timeAndHall[0])
+				timeAndHall := strings.Split(timeAndHallStr, ",")
+				if len(timeAndHall) < 2 {
+					timeAndHall = strings.Split(timeAndHallStr, "/")
+				}
+				playTimeStr := strings.TrimSpace(timeAndHall[0])
+
+				playTime, err := time.Parse("15.04", playTimeStr)
+				if err != nil {
+					// try other format
+					playTime, err = time.Parse("15:04", playTimeStr)
+				}
+
+				playHall := strings.TrimSpace(timeAndHall[1])
 				if err != nil {
 					return err
 				}
-
 				// get gamescores
 				homeScoreStr, err := file.GetCellValue(round.Worksheet, string(col+6)+strconv.Itoa(i))
 				if err != nil {
@@ -107,17 +130,61 @@ func (r Reader) UpdateGames() (err error) {
 
 				// build game entity and save
 				game := &model.Game{
-					ID:         timeAndHallStr,
+					ID:         timeAndHallStr + r.gameday.Name,
 					HomeID:     homeTeam,
 					AwayID:     awayTeam,
 					Time:       playTime,
 					AwayScores: awayScore,
 					HomeScores: homeScore,
-					Hall:       timeAndHall[1],
+					Hall:       playHall,
 					RoundID:    roundName,
 				}
 
 				r.db.Save(game)
+			}
+		}
+		for _, tableRange := range round.TableRanges {
+			place := 1
+			for i := tableRange.Start.Row; i <= tableRange.End.Row; i++ {
+				// get team name
+				// get column as rune, so we can later use integer manipulations on it our program will fail with columns larger than the alphabet
+				col := tableRange.Start.Col[0]
+				// get home team and persist it
+				team, err := file.GetCellValue(round.Worksheet, string(col)+strconv.Itoa(i))
+
+				if err != nil {
+					return err
+				}
+				// get wins
+				winsStr, err := file.GetCellValue(round.Worksheet, string(col+1)+strconv.Itoa(i))
+				if err != nil {
+					return err
+				}
+				wins, err := strconv.Atoi(winsStr)
+				if err != nil {
+					return err
+				}
+
+				// get diff
+				diffStr, err := file.GetCellValue(round.Worksheet, string(col+1)+strconv.Itoa(i))
+				if err != nil {
+					return err
+				}
+				diff, err := strconv.Atoi(diffStr)
+				if err != nil {
+					return err
+				}
+
+				r.db.Save(&model.TableRow{
+					ID:      team + roundName + r.gameday.Name,
+					TeamID:  team,
+					RoundId: roundName,
+					Wins:    wins,
+					Diff:    diff,
+					Place:   place,
+				})
+				place++
+
 			}
 		}
 	}
